@@ -7,23 +7,22 @@ on:
 
 jobs:
   # Single deploy job since we're just deploying
-  deploy:
-build:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Login Dockerhub
-      if: ${{ github.event_name == 'push' }}
-      env:
-        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
-        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
-      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  build:
+      runs-on: ubuntu-latest
       
-    - name: Build the Docker image
-      if: ${{ github.event_name == 'push' }}
-      run: docker build -t demian996/cicd-pipeline .
-    - name: Push to Dockerhub
-      if: ${{ github.event_name == 'push' }}
-      run: docker push demian996/cicd-pipeline:latest
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Login Dockerhub
+        if: ${{ github.event_name == 'push' }}
+        env:
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        
+      - name: Build the Docker image
+        if: ${{ github.event_name == 'push' }}
+        run: docker build -t demian996/cicd-pipeline .
+      - name: Push to Dockerhub
+        if: ${{ github.event_name == 'push' }}
+        run: docker push demian996/cicd-pipeline:latest
